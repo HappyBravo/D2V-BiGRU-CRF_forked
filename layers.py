@@ -6,11 +6,17 @@ from keras import activations
 from keras import initializers
 from keras import regularizers
 from keras import constraints
-from keras.engine import Layer
-from keras.engine import InputSpec
-from keras.objectives import categorical_crossentropy
-from keras.objectives import sparse_categorical_crossentropy
+# --------------- OLD --------------------
+# from keras.engine import Layer
+# from keras.engine import InputSpec
+# from keras.objectives import categorical_crossentropy
+# from keras.objectives import sparse_categorical_crossentropy
 
+# --------------- NEW --------------------
+from tensorflow.keras.layers import Layer 
+from tensorflow.keras.layers import InputSpec
+from tensorflow.keras.losses import categorical_crossentropy
+from tensorflow.keras.losses import sparse_categorical_crossentropy
 
 class CRF(Layer):
     """An implementation of linear chain conditional random field (CRF).
