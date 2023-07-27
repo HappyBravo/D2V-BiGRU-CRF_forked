@@ -10,7 +10,8 @@ from sklearn.base import BaseEstimator, TransformerMixin
 import joblib
 # from keras.utils.np_utils import to_categorical # OLD
 from tensorflow.keras.utils import to_categorical # NEW
-from keras.preprocessing.sequence import pad_sequences
+# from keras.preprocessing.sequence import pad_sequences # OLD
+from tensorflow.keras.preprocessing.sequence import pad_sequences # NEW
 
 from utils import Vocabulary
 

@@ -1,7 +1,11 @@
 from __future__ import absolute_import
 from __future__ import division
 
-import keras.backend as K
+import tensorflow as tf
+
+# import keras.backend as K # OLD
+import tensorflow.keras.backend as K # NEW
+
 from keras import activations
 from keras import initializers
 from keras import regularizers
@@ -181,18 +185,18 @@ class CRF(Layer):
         self.input_spec = [InputSpec(shape=input_shape)]
         self.input_dim = input_shape[-1]
 
-        self.kernel = self.add_weight((self.input_dim, self.units),
+        self.kernel = self.add_weight(shape=(self.input_dim, self.units),
                                       name='kernel',
                                       initializer=self.kernel_initializer,
                                       regularizer=self.kernel_regularizer,
                                       constraint=self.kernel_constraint)
-        self.chain_kernel = self.add_weight((self.units, self.units),
+        self.chain_kernel = self.add_weight(shape=(self.units, self.units),
                                             name='chain_kernel',
                                             initializer=self.chain_initializer,
                                             regularizer=self.chain_regularizer,
                                             constraint=self.chain_constraint)
         if self.use_bias:
-            self.bias = self.add_weight((self.units,),
+            self.bias = self.add_weight(shape=(self.units,),
                                         name='bias',
                                         initializer=self.bias_initializer,
                                         regularizer=self.bias_regularizer,
@@ -201,12 +205,12 @@ class CRF(Layer):
             self.bias = None
 
         if self.use_boundary:
-            self.left_boundary = self.add_weight((self.units,),
+            self.left_boundary = self.add_weight(shape=(self.units,),
                                                  name='left_boundary',
                                                  initializer=self.boundary_initializer,
                                                  regularizer=self.boundary_regularizer,
                                                  constraint=self.boundary_constraint)
-            self.right_boundary = self.add_weight((self.units,),
+            self.right_boundary = self.add_weight(shape=(self.units,),
                                                   name='right_boundary',
                                                   initializer=self.boundary_initializer,
                                                   regularizer=self.boundary_regularizer,
@@ -407,7 +411,7 @@ class CRF(Layer):
             if K.backend() == 'theano':
                 m = states[3][:, t:(t + 2)]
             else:
-                m = K.tf.slice(states[3], [0, t], [-1, 2])
+                m = tf.slice(states[3], [0, t], [-1, 2])
             input_energy_t = input_energy_t * K.expand_dims(m[:, 0])
             chain_energy = chain_energy * K.expand_dims(K.expand_dims(m[:, 0] * m[:, 1]))  # (1, F, F)*(B, 1, 1) -> (B, F, F)
         if return_logZ:
@@ -501,8 +505,8 @@ class CRF(Layer):
             if K.backend() == 'theano':
                 return params[K.T.arange(n), indices]
             else:
-                indices = K.transpose(K.stack([K.tf.range(n), indices]))
-                return K.tf.gather_nd(params, indices)
+                indices = K.transpose(K.stack([tf.range(n), indices]))
+                return tf.gather_nd(params, indices)
 
         def find_path(argmin_table, best_idx):
             next_best_idx = gather_each_row(argmin_table, best_idx[0][:, 0])
