@@ -23,7 +23,12 @@ def save_model(model, weights_file, params_file):
 
 def load_model(weights_file, params_file):
     with open(params_file) as f:
+        print("--- INSIDE load_model()\n")
+        input()
+
         model = model_from_json(f.read(), custom_objects={'CRF': CRF})
+        print("--- \n", model)
+        input()
         model.load_weights(weights_file)
     return model
 

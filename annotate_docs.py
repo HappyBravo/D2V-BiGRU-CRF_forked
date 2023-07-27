@@ -74,16 +74,23 @@ def get_catches_from_tagged_words(words, tags, scores):
 labels = ['X','O','B-LEG','I-LEG']
 
 def get_annotations(docs_folder, out_folder, models_folder, d2v_modelname):
+	model_wt_path = os.path.join(models_folder,"model_weights")
+	model_param_path = os.path.join(models_folder,"model_params")
+	model_pre_proc_path = os.path.join(models_folder,"model_pre_proc")
+
 	model = Sequence()
-	model = model.load(os.path.join(models_folder,"model_weights"), os.path.join(models_folder,"model_params"), os.path.join(models_folder,"model_pre_proc"))
+	model = model.load(model_wt_path, model_param_path, model_pre_proc_path)
+
 	if not os.path.exists(out_folder):
 		os.mkdir(out_folder)
-	flist = os.listdir(docs_folder)
+	flist = [_file for _file in os.listdir(docs_folder) if _file.endswith(".txt")]
 	d2v_model = doc2vec.Doc2Vec.load(d2v_modelname)
 	d2v_dim = len(d2v_model.infer_vector(['the','god'],steps=1))
 	for fn in flist:
 		try:
 			text = open(docs_folder+fn,'r', encoding='iso-8859-1').read()
+			print(text)
+			input()
 		except:
 			continue
 		x_test = get_X_test(text)

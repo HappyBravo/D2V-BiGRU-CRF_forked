@@ -172,6 +172,8 @@ class Sequence(object):
     def load(cls, weights_file, params_file, preprocessor_file):
         self = cls()
         self.p = IndexTransformer.load(preprocessor_file)
+        print(f"weights_file - {weights_file},\nparams_file - {params_file}")
+        input()
         self.model = load_model(weights_file, params_file)
-
+        print("--- Outside load model")
         return self
